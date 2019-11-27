@@ -21,8 +21,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     
     # Account paths
-    path('accounts/create/', users_views.create_user),
-    path('accounts/login/', users_views.login_user),
-    path('accounts/logout/', users_views.logout_user),
-    path('accounts/delete/', users_views.delete_user),
+    url('accounts/create/', users_views.create_user),
+    url('accounts/login/', users_views.login_user),
+    url('accounts/logout/', users_views.logout_user),
+    url('accounts/delete/', users_views.delete_user),
 ]

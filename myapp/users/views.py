@@ -1,11 +1,9 @@
-# from rest_framework.response import Response
+from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .serializers import *
 from .models import User
-from galleries.models import Gallery
 from argon2 import PasswordHasher
 import json
 
@@ -32,12 +30,6 @@ def create_user(request):
             new_user = User(email=email, password=hash)
             new_user.save()
 
-            # Create a gallery and associate with this user
-            gallery_name = "{}'s gallery".format(new_user.email)
-            new_gallery = Gallery(name=gallery_name, user=new_user)
-            new_gallery.save()
-            new_user.gallery = new_gallery
-            new_user.save()
             request.session['email'] = email
             request.session['id'] = new_user.pk
             print(request.session['email'], "has logged in!")
