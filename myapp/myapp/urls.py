@@ -16,11 +16,10 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from users import views as users_views
-from rest_framework import routers
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    
+
     # Account paths
     url('accounts/create/', users_views.create_user),
     url('accounts/login/', users_views.login_user),

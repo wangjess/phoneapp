@@ -1,13 +1,11 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from rest_framework import serializers
 
 from .serializers import *
 from .models import User
 from argon2 import PasswordHasher
 import json
-
 
 @api_view(['POST'])
 def create_user(request):
@@ -46,9 +44,7 @@ def create_user(request):
 
     else:
         print(serializer.errors)
-        # return Response(status=status.HTTP_500_CONFLICT)
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 @api_view(['POST'])
 def login_user(request):
