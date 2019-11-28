@@ -5,6 +5,7 @@ from rest_framework import status
 from .serializers import *
 from .models import User
 from argon2 import PasswordHasher
+from django.http import JsonResponse
 import json
 
 @api_view(['POST'])
@@ -12,15 +13,15 @@ def create_user(request):
     print("inside create_user")
     """ POST = Create user. """
     data = {}
-    print("request.data:\n", request.data)
+
+    my_json = request.body.decode('utf8').replace("'", '"')
+    data = json.loads(my_json)
     serializer = CreateUserSerializer(data=request.data)
-    print("got serializer")
+
     if serializer.is_valid():
-        print("serializer is valid!")
-        print("serializer.data:\n", serializer.data)
-        email = serializer.data['email']
-        codename = serializer.data['codename']
-        password = serializer.data['password']
+        email = data['email']
+        codename = data['codename']
+        password = data['password']
 
         user = User.objects.filter(email=email)
 
@@ -36,7 +37,7 @@ def create_user(request):
             request.session['email'] = email
             request.session['id'] = new_user.pk
             print(request.session['email'], "has logged in!")
-            print(request.session['id'], "user's id")
+            print("user's id:", request.session['id'])
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         # User with this email found... Please login...
