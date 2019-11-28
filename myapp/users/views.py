@@ -51,11 +51,16 @@ def create_user(request):
 def login_user(request):
     """ POST: Check that login credentials are correct and login. """
     # TODO: Security check on sending passwords over unencrypted HTTP
+    data = {}
+
+    my_json = request.body.decode('utf8').replace("'", '"')
+    data = json.loads(my_json)
+    email = data["email"]
+    password = data["email"]
+
     print("inside login_user")
     serializer = UserPostSerializer(data=request.data)
     print("got serializer")
-    email = serializer.initial_data['email']
-    password = serializer.initial_data['password']
 
     # Before attempting login, confirm user exists
     try:
@@ -66,10 +71,12 @@ def login_user(request):
 
     # Get user's password in database
     db_password = user.password
+    print("db_password:", db_password)
 
     ph = PasswordHasher()
     # Matches, so log in user
     if ph.verify(db_password, password):
+        print("logging in")
         # Session token here
         request.session['email'] = email
         request.session['id'] = user.pk
