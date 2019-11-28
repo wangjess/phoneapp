@@ -12,11 +12,12 @@ def create_user(request):
     print("inside create_user")
     """ POST = Create user. """
     data = {}
-    # print("request.data:\n", request.data)
-    serializer = UserPostSerializer(data=request.data)
+    print("request.data:\n", request.data)
+    serializer = CreateUserSerializer(data=request.data)
     print("got serializer")
     if serializer.is_valid():
         print("serializer is valid!")
+        print("serializer.data:\n", serializer.data)
         email = serializer.data['email']
         codename = serializer.data['codename']
         password = serializer.data['password']
