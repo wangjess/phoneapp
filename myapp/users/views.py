@@ -10,13 +10,12 @@ import json
 
 @api_view(['POST'])
 def create_user(request):
-    print("inside create_user")
     """ POST = Create user. """
     data = {}
 
     my_json = request.body.decode('utf8').replace("'", '"')
     data = json.loads(my_json)
-    serializer = CreateUserSerializer(data=request.data)
+    serializer = UserPostSerializer(data=request.data)
 
     if serializer.is_valid():
         email = data['email']
@@ -101,17 +100,17 @@ def logout_user(request):
     return Response(status=status.HTTP_403_METHOD_NOT_ALLOWED)
 
 
-@api_view(['DELETE'])
+@api_view(['POST'])
 def delete_user(request):
-    """ DELETE = Delete user using email. """
-    print("inside delete_user")
-    # TODO? A user must be logged in for delete functionality to work
-    # Otherwise, will fail when we try to access request.session (no user exists)
+    """ POST = Delete user using email. """
+    data = {}
 
-    # Get email (user) trying to be deleted
-    serializer = UserPostSerializer(data=request.data)
-    print("got serializer")
-    email = serializer.initial_data['email']
+    # TODO: Right now anybody can delete anyone, make sure only admin can
+    my_json = request.body.decode('utf8').replace("'", '"')
+    data = json.loads(my_json)
+    email = data['email']
+
+    # Get user to be deleted
     userToDelete = User.objects.filter(email=email)
     userToDelete.delete()
-    return Response(serializer.initial_data, status=status.HTTP_200_OK)
+    return Response(status=status.HTTP_200_OK)
